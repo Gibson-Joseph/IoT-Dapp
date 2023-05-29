@@ -1,0 +1,14 @@
+.park-heading {
+  @apply text-[25px] space-x-2 font-serif py-5 font-bold;
+}
+
+th {
+  @apply w-56 text-[20px] text-white font-bold;
+}
+td {
+  @apply py-3 px-2;
+}
+
+tbody > tr:nth-child(even) {
+  @apply bg-slate-200;
+}
