@@ -2,19 +2,23 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract SipcotPark {
+    struct Organization {
+        uint256 id;
+        string name;
+        string water_consumption;
+    }
+
     struct Park {
         uint256 id;
         string parkName;
-        uint256 water_consumption;
+        string water_consumption;
+        Organization[] organizations;
     }
-
-    string[] public parkNames;
-    uint256[] public water_consumption;
-    uint256[] public id;
-    // Park[] arr;
     mapping(uint256 => Park) public Parks;
+    mapping(uint256 => Organization[]) public Organizations;
 
     uint256 public numberOfParks = 0;
+    uint256 public numberOfOrganization = 0;
 
     function storePark(Park[] memory _data) public {
         for (uint256 i = 0; i < _data.length; i++) {
@@ -22,7 +26,17 @@ contract SipcotPark {
             newParks.id = _data[i].id;
             newParks.parkName = _data[i].parkName;
             newParks.water_consumption = _data[i].water_consumption;
-            // arr.push(_data[i]);
+            if (_data[i].organizations.length > 0) {
+                for (uint256 j = 0; j < _data[i].organizations.length; j++) {
+                    Organization memory newStruct = Organization(
+                        _data[i].organizations[j].id,
+                        _data[i].organizations[j].name,
+                        _data[i].organizations[j].water_consumption
+                    );
+                    Organizations[_data[i].id].push(newStruct);
+                    numberOfOrganization++;
+                }
+            }
             numberOfParks++;
         }
     }
@@ -35,7 +49,9 @@ contract SipcotPark {
         return ret;
     }
 
-    function getPark() public view returns (string[] memory) {
-        return parkNames;
+    function getOrganizationArr(
+        uint256 _id
+    ) public view returns (Organization[] memory) {
+        return Organizations[_id];
     }
 }

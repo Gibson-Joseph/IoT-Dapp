@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSmartContractContext } from "../../../context/ContractLoadingProvider";
+import Web3 from "web3";
+
 const HeaderComponent = () => {
   const {
     web3Api,
@@ -29,39 +31,51 @@ const HeaderComponent = () => {
   const hideFullAccounNo = () => {
     setShowFullAccoun(false);
   };
+
+  const disconnectWallet = async () => {
+    console.log("disconnectWallet function is not working");
+    if ((window as any).ethereum) {
+      const web3 = new Web3((window as any).ethereum);
+      const provider: any = web3.currentProvider;
+
+      if (provider) {
+        console.log("provider.disconnect", provider.disconnect);
+        console.log("provider.close", provider.close);
+
+        if (typeof provider.disconnect === "function") {
+          provider.disconnect();
+        } else if (typeof provider.close === "function") {
+          provider.close();
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     account && debounce(account);
   }, [account]);
 
   return (
-    <header className="flex px-2 py-3 border-b shadow-md shadow-indigo-50">
-      <div className="w-2/3 flex flex-auto items-center ">
-        <h1 className="text-center mx-auto text-[30px] font-bold font-serif">
+    <header className="bg-gradient-to-r from-blue-900 to-teal-900 py-4 px-8 flex justify-between items-center">
+      <div className="flex items-center justify-center flex-grow">
+        <h1 className="text-white text-3xl font-bold">
           Water Management System
         </h1>
       </div>
-      <nav className="w-1/3 flex justify-end items-center gap-4">
-        <div>
-          {account && (
-            <>
-              <span
-                onMouseEnter={() => showFullAccounNo()}
-                onMouseLeave={() => hideFullAccounNo()}
-                className="flex items-start justify-center cursor-pointer"
-              >
-                {shaownAccount}
-              </span>
-              {/* {account && showFullAccoun && <span>{account}</span>} */}
-            </>
-          )}
-        </div>
+      <div className="flex items-center">
+        <p className="text-white text-sm mr-4">
+          <span className="inline-block bg-blue-700 text-blue-100 rounded-full px-3 py-1 text-xs font-bold mr-2">
+            &#x24C8;
+          </span>
+          {shaownAccount}
+        </p>
         <button
-          onClick={() => connectWallet()}
-          className="bg-indigo-300 py-2 px-3 list-none rounded-md"
+          className="bg-white text-blue-500 font-medium py-2 px-4 rounded-lg hover:bg-blue-100 hover:text-blue-500 transition-colors duration-300 ease-in-out"
+          onClick={() => disconnectWallet()}
         >
-          {!account ? "Connect Wallet!" : "Disconnect Wallet"}
+          Disconnect Wallet
         </button>
-      </nav>
+      </div>
     </header>
   );
 };
