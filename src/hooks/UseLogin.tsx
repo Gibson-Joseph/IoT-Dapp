@@ -7,14 +7,12 @@ const UseLogin = () => {
   const dispatch = useDispatch();
   // const baseURL = "https://sipcot.api.codingtown.com/";
   const fetchHeader = () => {
-    console.log("featch header is called");
-
     axios
       .post(
         "https://sipcot.api.codingtown.com/v1/login",
         {
           email: "edison@yavar.in",
-          password: "Test@123",
+          password: "12345678",
         },
         {
           headers: {
@@ -30,8 +28,6 @@ const UseLogin = () => {
   };
 
   const state = useSelector((state: any) => state.login);
-  console.log("state", state);
-
   // const fetchPark = () => {
   //   axios
   //     .get("https://sipcot.api.codingtown.com/v1/dashboards/parks", {

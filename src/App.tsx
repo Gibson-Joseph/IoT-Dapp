@@ -11,6 +11,11 @@ import axios from "axios";
 import { ethers } from "ethers";
 import HeaderComponent from "./components/renderings/HeaderComponent/HeaderComponent";
 import MainContentComponent from "./components/renderings/MainContentComponent/MainContentComponent";
+import LoginPage from "./components/renderings/LoginPage/LoginPage";
+import FooterComponent from "./components/renderings/FooterComponent/FooterComponent";
+import { Route, Routes } from "react-router-dom";
+import OrganizationComponent from "./components/component/OrganizationComponent/OrganizationComponent";
+import SidebarComponent from "./components/component/SidebarComponent/SidebarComponent";
 interface INetwork {
   events: any;
   links: any;
@@ -27,7 +32,7 @@ function App() {
     storageContract,
     contractMethod,
   } = useSmartContractContext();
-
+  const [isDataStored, setIsDataStored] = useState(false);
   const connectWallet = () => {
     web3Api.provider &&
       web3Api.provider.request({ method: "eth_requestAccounts" });
@@ -51,7 +56,6 @@ function App() {
   const bearer = UseLogin();
 
   const state = useSelector((state: any) => state.login);
-  console.log("state.authorization", state.authorization);
 
   const fetchPark = async () => {
     await axios
@@ -62,24 +66,55 @@ function App() {
       })
       .then((res) => {
         console.log("park details", res.data);
-        const filterdData = res.data.map((data: any) => {
+        const filterdParkData = res.data.map((data: any) => {
           return {
             id: data.id,
             parkName: data.name,
-            water_consumption: data.water_consumption.toFixed(),
+            water_consumption: data.water_consumption.toString(),
+            organizations: data.organizations.map((data: any, i: number) => {
+              return {
+                id: data.id,
+                name: data.name,
+                water_consumption: data.water_consumption.toString(),
+              };
+            }),
+            // organizations: [],
           };
         });
-        console.log("filterdData", filterdData);
-        sendData(filterdData);
+        console.log("filterdParkData", filterdParkData);
+        // sendParkData([
+        //   {
+        //     id: 2,
+        //     organizations: [
+        //       { id: 6, name: "Irungatukottai", water_consumption: "15.5" },
+        //       { id: 8, name: "Test", water_consumption: "0" },
+        //       // { id: 10, name: "oragadam", water_consumption: "0" },
+        //     ],
+        //     parkName: "Coimbatore",
+        //     water_consumption: "15.5",
+        //   },
+        //   {
+        //     id: 1111,
+        //     organizations: [
+        //       { id: 6, name: "Kl Rahul", water_consumption: "11" },
+        //       // { id: 8, name: "Gibson", water_consumption: "0" },
+        //       // { id: 10, name: "Joseph", water_consumption: "0" },
+        //     ],
+        //     parkName: "Tamilnadu",
+        //     water_consumption: "1111111111",
+        //   },
+        // ]);
+        sendParkData(filterdParkData);
       })
       .catch((err) => console.log("Park Error", err));
   };
 
-  const sendData = async (filterdData: any) => {
+  const sendParkData = async (filterdParkData: any) => {
     let storePark = await contractMethod.methods
-      .storePark(filterdData)
+      .storePark(filterdParkData)
       .send({ from: account });
     console.log("storePark", storePark);
+    setIsDataStored(!isDataStored);
   };
 
   const getParkArr = async () => {
@@ -92,20 +127,37 @@ function App() {
   }, [web3Api, account]);
 
   return (
-    <div className="h-screen">
-      <HeaderComponent />
-      <button onClick={() => fetchPark()} className="bg-indigo-200 py-1 px-3">
-        Fetch Parks from API
-      </button>
-      {/* <button
-        onClick={() => getParkArr()}
-        className="bg-indigo-200 py-1 px-3 ml-3"
-      >
-        GetPark From Blockchain
-      </button> */}
-      <main className="h-full">
-        <MainContentComponent />
-      </main>
+    <div className="h-screen flex flex-col">
+      {!account ? (
+        <LoginPage />
+      ) : (
+        <>
+          <HeaderComponent />
+          <button
+            onClick={() => fetchPark()}
+            className="bg-indigo-200 py-1 w-52"
+          >
+            Fetch Parks from API
+          </button>
+          <div className="flex-grow">
+            <div>
+              <SidebarComponent />
+            </div>
+
+            <Routes>
+              <Route
+                path="/"
+                element={<MainContentComponent isDataStored={isDataStored} />}
+              />
+              <Route
+                path="/industory/:id"
+                element={<OrganizationComponent />}
+              />
+            </Routes>
+          </div>
+          <FooterComponent />
+        </>
+      )}
     </div>
   );
 }
