@@ -24,6 +24,12 @@ interface INetwork {
 }
 
 function App() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   const {
     web3Api,
     account,
@@ -78,33 +84,50 @@ function App() {
                 water_consumption: data.water_consumption.toString(),
               };
             }),
+            flow_meters_industries: data.devices.flow_meters_industries.map(
+              (data: any, i: number) => {
+                return {
+                  state: data.state,
+                };
+              }
+            ),
             // organizations: [],
           };
         });
         console.log("filterdParkData", filterdParkData);
-        // sendParkData([
-        //   {
-        //     id: 2,
-        //     organizations: [
-        //       { id: 6, name: "Irungatukottai", water_consumption: "15.5" },
-        //       { id: 8, name: "Test", water_consumption: "0" },
-        //       // { id: 10, name: "oragadam", water_consumption: "0" },
-        //     ],
-        //     parkName: "Coimbatore",
-        //     water_consumption: "15.5",
-        //   },
-        //   {
-        //     id: 1111,
-        //     organizations: [
-        //       { id: 6, name: "Kl Rahul", water_consumption: "11" },
-        //       // { id: 8, name: "Gibson", water_consumption: "0" },
-        //       // { id: 10, name: "Joseph", water_consumption: "0" },
-        //     ],
-        //     parkName: "Tamilnadu",
-        //     water_consumption: "1111111111",
-        //   },
-        // ]);
-        sendParkData(filterdParkData);
+        sendParkData([
+          {
+            flow_meters_industries: [
+              { state: "Offline" },
+              { state: "Offline" },
+              // { state: "Offline" },
+            ],
+            id: 2,
+            organizations: [
+              { id: 6, name: "Irungatukottai", water_consumption: "15.5" },
+              { id: 8, name: "Test", water_consumption: "0" },
+              // { id: 10, name: "oragadam", water_consumption: "0" },
+            ],
+            parkName: "Coimbatore",
+            water_consumption: "15.5",
+          },
+          {
+            flow_meters_industries: [
+              { state: "Offline" },
+              // { state: "Offline" },
+              // { state: "Offline" },
+            ],
+            id: 1111,
+            organizations: [
+              { id: 6, name: "Kl Rahul", water_consumption: "11" },
+              // { id: 8, name: "Gibson", water_consumption: "0" },
+              // { id: 10, name: "Joseph", water_consumption: "0" },
+            ],
+            parkName: "Tamilnadu",
+            water_consumption: "1111111111",
+          },
+        ]);
+        // sendParkData(filterdParkData);
       })
       .catch((err) => console.log("Park Error", err));
   };
@@ -132,7 +155,7 @@ function App() {
         <LoginPage />
       ) : (
         <>
-          <HeaderComponent />
+          <HeaderComponent isOpen={isOpen} setIsOpen={setIsOpen} />
           <button
             onClick={() => fetchPark()}
             className="bg-indigo-200 py-1 w-52"
@@ -141,7 +164,7 @@ function App() {
           </button>
           <div className="flex-grow">
             <div>
-              <SidebarComponent />
+              <SidebarComponent isOpen={isOpen} setIsOpen={setIsOpen} />
             </div>
 
             <Routes>
