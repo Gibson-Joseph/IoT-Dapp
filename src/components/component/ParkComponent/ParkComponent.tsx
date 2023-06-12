@@ -13,6 +13,7 @@ const ParkComponent = ({ isDataStored }: any) => {
   const getParkArr = useCallback(async () => {
     let getParkArr = await contractMethod.methods.getParkArr().call();
     setParks(getParkArr);
+    console.log("getParkArr", getParkArr);
   }, []);
 
   const handleOrganization = async (id: number) => {
@@ -29,7 +30,11 @@ const ParkComponent = ({ isDataStored }: any) => {
       {/* <ParkHeaderComponent /> */}
       {/* Park List Table */}
       <div className="w-full h-full flex flex-col items-center">
-        <TableComponent parks={parks} handleOrganization={handleOrganization} />
+        <TableComponent
+          parks={parks}
+          name={"Parks"}
+          handleOrganization={handleOrganization}
+        />
       </div>
     </>
   );

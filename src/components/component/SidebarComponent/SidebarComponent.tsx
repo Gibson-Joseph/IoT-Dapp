@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-
-const SidebarComponent = () => {
-  const [isOpen, setIsOpen] = useState(false);
+import menu from "../../../assets/menu.png";
+import { ReactComponent as Industry } from "../../../assets/industry.svg";
+import { ReactComponent as Dashboard } from "../../../assets/dashboard.svg";
+import { ReactComponent as ParkUsers } from "../../../assets/parkUsers.svg";
+const SidebarComponent = ({ isOpen, setIsOpen }: any) => {
+  // const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -9,27 +12,33 @@ const SidebarComponent = () => {
 
   return (
     <div className="flex h-full">
-      {/* Button to toggle the sidebar */}
-      <button
-        className="px-4 py-2 bg-blue-500 text-white"
-        onClick={toggleSidebar}
-      >
-        Toggle Sidebar
-      </button>
-
       {/* Sidebar */}
       <div
-        className={`fixed min-h-full left-0 z-50 w-64 bg-gray-800 transition-transform duration-300 ease-in-out transform ${
+        className={`fixed min-h-full top-0 left-0 z-50 w-64 bg-gray-800 transition-transform duration-300 ease-in-out transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <h1 className="py-1 px-2 text-center text-white">Menu</h1>
+        <div className="flex justify-between">
+          <h1 className="py-2 px-2 text-center text-white">SIPCOT Menu</h1>
+          <button className="px-4 py-2 text-white" onClick={toggleSidebar}>
+            <img src={menu} alt="menu" className="h-[20px] bg-white" />
+          </button>
+        </div>
         <div className="border-b-[1px] border-b-slate-400"></div>
         {/* Sidebar content */}
         <ul className="mt-4">
-          <li className="px-4 py-2 text-white">Sidebar Item 1</li>
-          <li className="px-4 py-2 text-white">Sidebar Item 2</li>
-          <li className="px-4 py-2 text-white">Sidebar Item 3</li>
+          <li className="px-4 py-3 text-white cursor-pointer hover:bg-slate-600 font-normal text-[16px] flex">
+            <Dashboard fill="#fff" className="h-6 w-6" />
+            <span className="ml-2">Dashboard</span>
+          </li>
+          <li className="px-4 py-3 text-white cursor-pointer hover:bg-slate-600 font-normal text-[16px] flex">
+            <Industry fill="#fff" className="h-6 w-6" />
+            <span className="ml-2">Industry</span>
+          </li>
+          <li className="px-4 py-3 text-white cursor-pointer hover:bg-slate-600 font-normal text-[16px] flex">
+            <ParkUsers fill="#fff" className="h-6 w-6" />
+            <span className="ml-2">Park Users</span>
+          </li>
         </ul>
       </div>
 

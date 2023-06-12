@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSmartContractContext } from "../../../context/ContractLoadingProvider";
 import Web3 from "web3";
+import sipcotLogo from "../../../assets/sipcotLogo.png";
+import menu from "../../../assets/menu.png";
 
-const HeaderComponent = () => {
+const HeaderComponent = ({ isOpen, setIsOpen }: any) => {
   const {
     web3Api,
     account,
@@ -17,6 +19,10 @@ const HeaderComponent = () => {
   const connectWallet = () => {
     web3Api.provider &&
       web3Api.provider.request({ method: "eth_requestAccounts" });
+  };
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
   };
 
   const debounce = (accoun: string | null) => {
@@ -56,21 +62,23 @@ const HeaderComponent = () => {
   }, [account]);
 
   return (
-    <header className="bg-gradient-to-r from-blue-900 to-teal-900 py-4 px-8 flex justify-between items-center">
-      <div className="flex items-center justify-center flex-grow">
-        <h1 className="text-white text-3xl font-bold">
-          Water Management System
-        </h1>
+    // <header className="bg-gradient-to-r from-blue-900 to-teal-900 py-4 px-8 flex justify-between items-center">
+    <header className="py-2 px-4 flex justify-between items-center bg-white border border-b-[#c8ced3]">
+      <div className="flex items-center flex-grow">
+        <button className=" text-white pr-5" onClick={toggleSidebar}>
+          <img src={menu} alt="menu" className="h-[20px]" />
+        </button>
+        <img src={sipcotLogo} alt="sipcotLogo" className="h-12" />
       </div>
       <div className="flex items-center">
-        <p className="text-white text-sm mr-4">
+        <p className="text-gray-800 text-sm mr-4">
           <span className="inline-block bg-blue-700 text-blue-100 rounded-full px-3 py-1 text-xs font-bold mr-2">
             &#x24C8;
           </span>
           {shaownAccount}
         </p>
         <button
-          className="bg-white text-blue-500 font-medium py-2 px-4 rounded-lg hover:bg-blue-100 hover:text-blue-500 transition-colors duration-300 ease-in-out"
+          className="bg-blue-700 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-800 hover:text-white transition-colors duration-300 ease-in-out"
           onClick={() => disconnectWallet()}
         >
           Disconnect Wallet
