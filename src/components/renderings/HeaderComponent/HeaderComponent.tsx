@@ -15,11 +15,6 @@ const HeaderComponent = ({ isOpen, setIsOpen }: any) => {
   } = useSmartContractContext();
 
   const [shaownAccount, setShowAccount] = useState<string | null>(null);
-  const [showFullAccoun, setShowFullAccoun] = useState<boolean>(false);
-  const connectWallet = () => {
-    web3Api.provider &&
-      web3Api.provider.request({ method: "eth_requestAccounts" });
-  };
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -31,30 +26,31 @@ const HeaderComponent = ({ isOpen, setIsOpen }: any) => {
     setShowAccount(`${trimFirst}.....${trimLast}`);
   };
 
-  const showFullAccounNo = () => {
-    setShowFullAccoun(true);
-  };
-  const hideFullAccounNo = () => {
-    setShowFullAccoun(false);
-  };
-
   const disconnectWallet = async () => {
     console.log("disconnectWallet function is not working");
-    if ((window as any).ethereum) {
-      const web3 = new Web3((window as any).ethereum);
-      const provider: any = web3.currentProvider;
+    // if ((window as any).ethereum) {
+    //   const web3 = new Web3((window as any).ethereum);
+    //   const provider: any = web3.currentProvider;
 
-      if (provider) {
-        console.log("provider.disconnect", provider.disconnect);
-        console.log("provider.close", provider.close);
+    //   if (provider) {
+    //     console.log("provider.disconnect", provider.disconnect);
+    //     console.log("provider.close", provider.close);
 
-        if (typeof provider.disconnect === "function") {
-          provider.disconnect();
-        } else if (typeof provider.close === "function") {
-          provider.close();
-        }
-      }
-    }
+    //     if (typeof provider.disconnect === "function") {
+    //       provider.disconnect();
+    //     } else if (typeof provider.close === "function") {
+    //       provider.close();
+    //     }
+    //   }
+    // }
+    await (window as any).ethereum.request({
+      method: "wallet_requestPermissions",
+      params: [
+        {
+          eth_accounts: {},
+        },
+      ],
+    });
   };
 
   useEffect(() => {

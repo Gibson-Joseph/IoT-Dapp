@@ -4,8 +4,6 @@ import { ReactComponent as Industry } from "../../../assets/industry.svg";
 import { ReactComponent as Dashboard } from "../../../assets/dashboard.svg";
 import { ReactComponent as ParkUsers } from "../../../assets/parkUsers.svg";
 const SidebarComponent = ({ isOpen, setIsOpen }: any) => {
-  // const [isOpen, setIsOpen] = useState(false);
-
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
