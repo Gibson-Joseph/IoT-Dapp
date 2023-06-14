@@ -1,6 +1,10 @@
 import React from "react";
 import { useSmartContractContext } from "../../../context/ContractLoadingProvider";
 import sipcotLogo from "../../../assets/sipcotLogo.png";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { metamaskLogin } from "../../../redux/actions/Logins.action";
+import requireAuth from "../../../hoc/Hoc";
 const LoginPage = () => {
   const {
     web3Api,
@@ -11,10 +15,16 @@ const LoginPage = () => {
     contractMethod,
   } = useSmartContractContext();
 
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
   const connectWithMetamask = async () => {
     web3Api.provider &&
       (await web3Api.provider.request({ method: "eth_requestAccounts" }));
     await getAccount();
+    dispatch(metamaskLogin({ isMetaMaskLogin: true }));
+    navigate("/");
   };
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
@@ -24,7 +34,9 @@ const LoginPage = () => {
       <div className="bg-white p-8 rounded shadow-lg border border-blue-300">
         <div className="w-full">
           <img src={sipcotLogo} alt="sipcotLogo" className="m-auto pb-5" />
-          <h2 className="text-2xl font-bold mb-4 text-center">Metamask Login</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center">
+            Metamask Login
+          </h2>
         </div>
         <p className="text-gray-600 mb-4">
           To access your account, please connect with Metamask below
@@ -40,4 +52,5 @@ const LoginPage = () => {
   );
 };
 
+// export default requireAuth(LoginPage);
 export default LoginPage;
